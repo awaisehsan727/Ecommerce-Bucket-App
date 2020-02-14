@@ -10,9 +10,7 @@ import {
 import FastImage from 'react-native-fast-image';
  
 export default class Categories extends Component {
-  static navigationOptions = {
-    tabBarLabel: 'Category',
-  };
+
   constructor(props) {
     super(props);
     this.state = {

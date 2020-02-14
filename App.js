@@ -44,9 +44,8 @@ const HomeStack = createStackNavigator(
     Splash: {
       screen: Splash,
       navigationOptions: {
-        header: null,
-        tabBarVisible: false,
-      }
+        header: null
+      },
     },
   },
   {
@@ -59,7 +58,7 @@ const HomeStack = createStackNavigator(
       headerTintColor: 'white',
       //Header title
     },
-    initialRouteName: 'Splash'
+    initialRouteName: 'Splash',
   }
 );
 const SettingsStack = createStackNavigator(
@@ -127,13 +126,13 @@ const AccountsSctack = createStackNavigator(
     },
   }
 );
-const App = createBottomTabNavigator(
+const Tabbar = createBottomTabNavigator(
   {
     Home: { screen: HomeStack },
     Notisfication: { screen: NotisficationStack },
     Cart: { screen: CartStack },
     Account: { screen: AccountsSctack },
-    Settings: { screen: SettingsStack },
+    // Settings: { screen: SettingsStack },
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -160,6 +159,7 @@ const App = createBottomTabNavigator(
             source={require('./images/Cart.png')}
             style={{ height: 25, width: 25, }}
             focused={focused}
+            tintColor={tintColor}
           />;
         }
         if (routeName === 'Account') {
@@ -182,9 +182,9 @@ const App = createBottomTabNavigator(
       },
     }),
     tabBarOptions: {
-      activeTintColor: '#315660',
+      activeTintColor: 'brown',
       inactiveTintColor: 'black',
     },
   }
 );
-export default createAppContainer(App);
+export default createAppContainer(Tabbar);
