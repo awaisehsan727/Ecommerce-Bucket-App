@@ -13,8 +13,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 export default class HomeScreen extends React.Component {
   //Home Screen to show in Home Option
   static navigationOptions = {
-    header: null,
-  };
+    headerShown: false
+    };
   state = {
     search: '',
   };
@@ -72,7 +72,7 @@ export default class HomeScreen extends React.Component {
                 searchIcon={{ color: 'black' }}
                 cancelIcon={{ color: 'black' }}
                 containerStyle={{
-                  backgroundColor: 'lightblue|white', borderWidth: 0,
+                  backgroundColor: 'white', borderWidth: 0,
                   borderBottomColor: 'white',
                   borderLeftColor: 'white',
                   borderRightColor: 'white',

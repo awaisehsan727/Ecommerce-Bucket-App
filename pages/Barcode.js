@@ -16,7 +16,10 @@ export default class Barcode extends PureComponent {
     }
   }
   onBarCodeRead = (e) => {
-    Alert.alert("Barcode value is" + e.data, "Barcode type is" + e.type);
+  //   this.props.navigation.navigate('WebVi', {  
+  //     Value:e.data,  
+  // })  ;
+  Alert.alert("Barcode value is" + e.data, "Barcode type is" + e.type);
   }
   render() {
     const leftTop = {

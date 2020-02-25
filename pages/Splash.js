@@ -3,7 +3,7 @@ import { View, Text,StatusBar,Image,ImageBackground } from 'react-native';
 
 class Splash extends React.Component {
     static navigationOptions = {
-        header: null ,
+      headerShown: false
       };
   componentWillMount() {
     setTimeout(() => {

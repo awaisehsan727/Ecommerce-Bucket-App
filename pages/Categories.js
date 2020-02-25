@@ -1,136 +1,93 @@
-import React, { Component } from 'react';
+import React from "react";
 import {
   StyleSheet,
-  Text,
   View,
-  TouchableOpacity,
+  ActivityIndicator,
   FlatList,
-  Modal,
-} from 'react-native';
-import FastImage from 'react-native-fast-image';
- 
-export default class Categories extends Component {
-
+  Text,
+  TouchableOpacity
+} from "react-native";
+import WooCommerce from '../WooConfig'
+export default class Categories extends React.Component {
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: "Source Listing",
+      headerStyle: { backgroundColor: "#fff" },
+      headerTitleStyle: { textAlign: "center", flex: 1 }
+    };
+  };
   constructor(props) {
     super(props);
     this.state = {
-      imageuri: '',
-      ModalVisibleStatus: false,
+      loading: true,
+      dataSource: []
     };
   }
- 
-  ShowModalFunction(visible, imageURL) {
-    //handler to handle the click on image of Grid
-    //and close button on modal
-    this.setState({
-      ModalVisibleStatus: visible,
-      imageuri: imageURL,
-    });
-  }
- 
   componentDidMount() {
-    var that = this;
-    let items = Array.apply(null, Array(120)).map((v, i) => {
-      return { id: i, src: 'https://unsplash.it/400/400?image=' + (i + 1) };
-    });
-    that.setState({
-      dataSource: items,
-    });
+    WooCommerce.get('products/Categories', {
+    })
+      .then((responseJson) => {
+        this.setState({
+          loading: false,
+          dataSource: responseJson
+        })
+      })
+      .catch((error) => {
+        console.log(error.responseJson.data);
+      });
   }
- 
+  FlatListItemSeparator = () => {
+    return (
+      <View style={{
+        height: .5,
+        width: "100%",
+        backgroundColor: "white",
+      }}
+      />
+    );
+  }
+  renderItem = (data) =>
+    <TouchableOpacity style={styles.list}>
+      <Text style={styles.lightText}>{data.item.name}</Text>
+      <Text style={styles.lightText}>{data.item.slug}
+      </Text>
+      <Text style={styles.lightText}>{data.item.description}
+      </Text>
+      </TouchableOpacity>
   render() {
-    if (this.state.ModalVisibleStatus) {
+    if (this.state.loading) {
       return (
-        <Modal
-          transparent={false}
-          animationType={'fade'}
-          visible={this.state.ModalVisibleStatus}
-          onRequestClose={() => {
-            this.ShowModalFunction(!this.state.ModalVisibleStatus, '');
-          }}>
-          <View style={styles.modelStyle}>
-            <FastImage
-              style={styles.fullImageStyle}
-              source={{ uri: this.state.imageuri }}
-              resizeMode={FastImage.resizeMode.contain}
-            />
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={styles.closeButtonStyle}
-              onPress={() => {
-                this.ShowModalFunction(!this.state.ModalVisibleStatus, '');
-              }}>
-              <FastImage
-                source={{
-                  uri:
-                    'https://raw.githubusercontent.com/AboutReact/sampleresource/master/close.png',
-                }}
-                style={{ width: 35, height: 35, marginTop: 16 }}
-              />
-            </TouchableOpacity>
-          </View>
-        </Modal>
-      );
-    } else {
-      return (
-        <View style={styles.container}>
-          <FlatList
-            data={this.state.dataSource}
-            renderItem={({ item }) => (
-              <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
-                <TouchableOpacity
-                  key={item.id}
-                  style={{ flex: 1 }}
-                  onPress={() => {
-                    this.ShowModalFunction(true, item.src);
-                  }}>
-                  <FastImage
-                    style={styles.image}
-                    source={{
-                      uri: item.src,
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-            //Setting the number of column
-            numColumns={2}
-            keyExtractor={(item, index) => index.toString()}
-          />
+        <View style={styles.loader}>
+          <ActivityIndicator size="large" color="#0c9" />
         </View>
-      );
+      )
     }
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={this.state.dataSource}
+          ItemSeparatorComponent={this.FlatListItemSeparator}
+          renderItem={item => this.renderItem(item)}
+          keyExtractor={item => item.id.toString()}
+        />
+      </View>
+    )
   }
 }
- 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 5,
+    backgroundColor: "white"
   },
-  image: {
-    height: 120,
-    width: '100%',
-  },
-  fullImageStyle: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-    width: '98%',
-    resizeMode: 'contain',
-  },
-  modelStyle: {
+  loader: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "lightgrey"
   },
-  closeButtonStyle: {
-    width: 25,
-    height: 25,
-    top: 9,
-    right: 9,
-    position: 'absolute',
-  },
+  list: {
+    paddingVertical: 4,
+    margin: 5,
+    backgroundColor: "lightblue"
+  }
 });
- 

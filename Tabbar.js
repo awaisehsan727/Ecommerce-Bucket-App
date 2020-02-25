@@ -30,6 +30,7 @@ import Cart from './pages/Cart';
 import Notisfication from './pages/Notisfication';
 import { Image } from 'react-native';
 import Account from './pages/Accounts';
+import WebVi from './pages/WebVi';
 const HomeStack = createStackNavigator(
   {
     //Defination of Navigaton from home screen
@@ -40,6 +41,7 @@ const HomeStack = createStackNavigator(
     FlashDetail: { screen: FlashDetail },
     brands: { screen: brands },
     Offers: { screen: Offers },
+    WebVi:{screen:WebVi},
     Topselection: { screen: Topselection },
     Splash: {
       screen: Splash,
