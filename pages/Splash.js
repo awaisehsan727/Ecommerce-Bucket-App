@@ -7,7 +7,7 @@ class Splash extends React.Component {
       };
   componentWillMount() {
     setTimeout(() => {
-        this.props.navigation.replace('Home');
+        this.props.navigation.replace('Tabbar');
     }, 1000);
 }
   render() {
