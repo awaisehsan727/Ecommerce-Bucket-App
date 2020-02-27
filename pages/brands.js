@@ -5,17 +5,11 @@ import {
   ActivityIndicator,
   FlatList,
   Text,
+  Image,
   TouchableOpacity
 } from "react-native";
 import WooCommerce from '../WooConfig'
 export default class Categories extends React.Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: "Source Listing",
-      headerStyle: { backgroundColor: "#fff" },
-      headerTitleStyle: { textAlign: "center", flex: 1 }
-    };
-  };
   constructor(props) {
     super(props);
     this.state = {
@@ -24,13 +18,14 @@ export default class Categories extends React.Component {
     };
   }
   componentDidMount() {
-    WooCommerce.get('products/Categories', {
+    WooCommerce.get('products', {
     })
       .then((responseJson) => {
         this.setState({
           loading: false,
           dataSource: responseJson
         })
+        console.log(responseJson)
       })
       .catch((error) => {
         console.log(error.responseJson.data);
@@ -48,12 +43,11 @@ export default class Categories extends React.Component {
   }
   renderItem = (data) =>
     <TouchableOpacity style={styles.list}>
-      <Text style={styles.lightText}>{data.item.name}</Text>
-      <Text style={styles.lightText}>{data.item.slug}
+      <Image style={styles.image} source={{ uri: data.item.images[0].src }} />
+      <Text style={styles.Text}>{data.item.name}</Text>
+      <Text style={styles.Text}>{data.item.slug}
       </Text>
-      <Text style={styles.lightText}>{data.item.description}
-      </Text>
-      </TouchableOpacity>
+    </TouchableOpacity>
   render() {
     if (this.state.loading) {
       return (
@@ -88,6 +82,18 @@ const styles = StyleSheet.create({
   list: {
     paddingVertical: 4,
     margin: 5,
-    backgroundColor: "lightblue"
-  }
+    backgroundColor: "lightblue",
+   
+  },
+  image: {
+    width: 250,
+    height: 200,
+    alignSelf: 'center',
+    marginTop:10
+  },
+  Text: {
+    fontSize: 20,
+    alignSelf: 'center'
+
+  },
 });

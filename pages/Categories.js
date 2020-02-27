@@ -5,22 +5,18 @@ import {
   ActivityIndicator,
   FlatList,
   Text,
+  Image,
+  Alert,
   TouchableOpacity
 } from "react-native";
+import Tabs from 'react-native-tabs';
 import WooCommerce from '../WooConfig'
 export default class Categories extends React.Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: "Source Listing",
-      headerStyle: { backgroundColor: "#fff" },
-      headerTitleStyle: { textAlign: "center", flex: 1 }
-    };
-  };
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
-      dataSource: []
+      dataSource: [],
     };
   }
   componentDidMount() {
@@ -29,8 +25,9 @@ export default class Categories extends React.Component {
       .then((responseJson) => {
         this.setState({
           loading: false,
-          dataSource: responseJson
+          dataSource: responseJson,
         })
+        console.log(responseJson)
       })
       .catch((error) => {
         console.log(error.responseJson.data);
@@ -47,13 +44,11 @@ export default class Categories extends React.Component {
     );
   }
   renderItem = (data) =>
-    <TouchableOpacity style={styles.list}>
+    <TouchableOpacity style={styles.lists}>
       <Text style={styles.lightText}>{data.item.name}</Text>
       <Text style={styles.lightText}>{data.item.slug}
       </Text>
-      <Text style={styles.lightText}>{data.item.description}
-      </Text>
-      </TouchableOpacity>
+    </TouchableOpacity>
   render() {
     if (this.state.loading) {
       return (
@@ -85,9 +80,39 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "lightgrey"
   },
-  list: {
+  lists: {
     paddingVertical: 4,
     margin: 5,
     backgroundColor: "lightblue"
-  }
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
+  Tabs:
+  {
+    alignSelf:'flex-start',
+    backgroundColor:'green',
+    position:'relative',
+  },list: {
+    paddingHorizontal: 5,
+    backgroundColor:"#fff",
+  },
+  listContainer:{
+    alignItems:'center'
+  },
+  menuBox:{
+    backgroundColor: "#DCDCDC",
+    width:100,
+    height:100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin:12
+  },
 });

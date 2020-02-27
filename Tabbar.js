@@ -31,6 +31,8 @@ import Notisfication from './pages/Notisfication';
 import { Image } from 'react-native';
 import Account from './pages/Accounts';
 import WebVi from './pages/WebVi';
+import Login from './pages/Login';
+import Signup from './pages/Signup'
 const HomeStack = createStackNavigator(
   {
     //Defination of Navigaton from home screen
@@ -113,7 +115,9 @@ const CartStack = createStackNavigator(
 );
 const AccountsSctack = createStackNavigator(
   {
-    Account: { screen: Account }
+    Account: { screen: Account },
+    Login:{screen: Login},
+    Signup:{screen:Signup}
     //Defination of Navigaton from setting screen
   },
   {
