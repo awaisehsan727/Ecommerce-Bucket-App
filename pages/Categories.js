@@ -7,9 +7,8 @@ import {
   Text,
   Image,
   Alert,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
-import Tabs from 'react-native-tabs';
 import WooCommerce from '../WooConfig'
 export default class Categories extends React.Component {
   constructor(props) {
@@ -19,15 +18,15 @@ export default class Categories extends React.Component {
       dataSource: [],
     };
   }
-  componentDidMount() {
-    WooCommerce.get('products/Categories', {
-    })
+  componentWillMount() {
+    let dataSource;
+    WooCommerce.get('products/Categories', {'per_page': 100})
       .then((responseJson) => {
         this.setState({
           loading: false,
-          dataSource: responseJson,
+          dataSource: responseJson
         })
-        console.log(responseJson)
+        console.log(dataSource)
       })
       .catch((error) => {
         console.log(error.responseJson.data);
@@ -43,12 +42,12 @@ export default class Categories extends React.Component {
       />
     );
   }
-  renderItem = (data) =>
-    <TouchableOpacity style={styles.lists}>
+  renderItem = (data) =>{
+    return(<TouchableOpacity style={styles.lists}>
       <Text style={styles.lightText}>{data.item.name}</Text>
-      <Text style={styles.lightText}>{data.item.slug}
-      </Text>
-    </TouchableOpacity>
+      <Text style={styles.lightText}>{data.item.slug}</Text>
+    </TouchableOpacity>)
+  } 
   render() {
     if (this.state.loading) {
       return (
@@ -114,5 +113,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     margin:12
+  },
+  images: {
+    width: 100,
+    height: 100,
+    alignSelf: 'center',
+    marginTop:10
   },
 });

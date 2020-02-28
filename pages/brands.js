@@ -18,8 +18,7 @@ export default class Categories extends React.Component {
     };
   }
   componentDidMount() {
-    WooCommerce.get('products', {
-    })
+    WooCommerce.get('products', { 'per_page': 100 })
       .then((responseJson) => {
         this.setState({
           loading: false,
@@ -41,13 +40,12 @@ export default class Categories extends React.Component {
       />
     );
   }
-  renderItem = (data) =>
-    <TouchableOpacity style={styles.list}>
+  renderItem = (data) => {
+    return(<TouchableOpacity style={styles.list}>
       <Image style={styles.image} source={{ uri: data.item.images[0].src }} />
       <Text style={styles.Text}>{data.item.name}</Text>
-      <Text style={styles.Text}>{data.item.slug}
-      </Text>
-    </TouchableOpacity>
+    </TouchableOpacity>)
+  }
   render() {
     if (this.state.loading) {
       return (
@@ -83,17 +81,16 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     margin: 5,
     backgroundColor: "lightblue",
-   
+
   },
   image: {
-    width: 250,
-    height: 200,
+    width: 100,
+    height: 100,
     alignSelf: 'center',
-    marginTop:10
+    marginTop: 10
   },
   Text: {
-    fontSize: 20,
-    alignSelf: 'center'
-
+    alignSelf: 'center',
+    justifyContent: 'center'
   },
 });
