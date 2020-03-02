@@ -24,7 +24,7 @@ export default class Categories extends React.Component {
           loading: false,
           dataSource: responseJson
         })
-        console.log(responseJson)
+       console.log(responseJson)
       })
       .catch((error) => {
         console.log(error.responseJson.data);

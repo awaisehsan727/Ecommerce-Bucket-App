@@ -25,7 +25,7 @@ export default class Categories extends React.Component {
           loading: false,
           dataSource: responseJson
         })
-        console.log(responseJson)
+       console.log(responseJson)
       })
       .catch((error) => {
         console.log(error.responseJson.data);
@@ -50,7 +50,8 @@ export default class Categories extends React.Component {
         <Text style={styles.Text}>{data.item.name}</Text>
       </TouchableOpacity>)
     }
-    else {
+    else 
+    {
       return (<TouchableOpacity style={styles.lists}>
         <Image style={styles.image} source={{ uri: data.item.image.src }} />
         <Text style={styles.Text}>{data.item.name}</Text>
@@ -72,6 +73,7 @@ export default class Categories extends React.Component {
           data={this.state.dataSource}
           ItemSeparatorComponent={this.FlatListItemSeparator}
           renderItem={item => this.renderItem(item)}
+          keyExtractor={item => item.id.toString()}
         />
       </View>
     )
