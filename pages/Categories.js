@@ -19,14 +19,13 @@ export default class Categories extends React.Component {
     };
   }
   componentWillMount() {
-    let dataSource;
-    WooCommerce.get('products/Categories', {'per_page': 100})
+    WooCommerce.get('products/Categories', { 'per_page': 100 })
       .then((responseJson) => {
         this.setState({
           loading: false,
           dataSource: responseJson
         })
-        console.log(dataSource)
+        console.log(responseJson)
       })
       .catch((error) => {
         console.log(error.responseJson.data);
@@ -42,12 +41,23 @@ export default class Categories extends React.Component {
       />
     );
   }
-  renderItem = (data) =>{
-    return(<TouchableOpacity style={styles.lists}>
-      <Text style={styles.lightText}>{data.item.name}</Text>
-      <Text style={styles.lightText}>{data.item.slug}</Text>
-    </TouchableOpacity>)
-  } 
+  renderItem = (data) =>
+   {
+    if (data.item.image == null) 
+    {
+      return (<TouchableOpacity style={styles.lists}>
+        <Image style={styles.image} source={{ uri: 'https://bktstaging.devzonesolutions.com/wp-content/uploads/woocommerce-placeholder.png' }} />
+        <Text style={styles.Text}>{data.item.name}</Text>
+      </TouchableOpacity>)
+    }
+    else {
+      return (<TouchableOpacity style={styles.lists}>
+        <Image style={styles.image} source={{ uri: data.item.image.src }} />
+        <Text style={styles.Text}>{data.item.name}</Text>
+      </TouchableOpacity>)
+    }
+  }
+  
   render() {
     if (this.state.loading) {
       return (
@@ -62,7 +72,6 @@ export default class Categories extends React.Component {
           data={this.state.dataSource}
           ItemSeparatorComponent={this.FlatListItemSeparator}
           renderItem={item => this.renderItem(item)}
-          keyExtractor={item => item.id.toString()}
         />
       </View>
     )
@@ -96,28 +105,32 @@ const styles = StyleSheet.create({
   },
   Tabs:
   {
-    alignSelf:'flex-start',
-    backgroundColor:'green',
-    position:'relative',
-  },list: {
+    alignSelf: 'flex-start',
+    backgroundColor: 'green',
+    position: 'relative',
+  }, list: {
     paddingHorizontal: 5,
-    backgroundColor:"#fff",
+    backgroundColor: "#fff",
   },
-  listContainer:{
-    alignItems:'center'
+  listContainer: {
+    alignItems: 'center'
   },
-  menuBox:{
+  menuBox: {
     backgroundColor: "#DCDCDC",
-    width:100,
-    height:100,
+    width: 100,
+    height: 100,
     alignItems: 'center',
     justifyContent: 'center',
-    margin:12
+    margin: 12
   },
-  images: {
+  image: {
     width: 100,
     height: 100,
     alignSelf: 'center',
-    marginTop:10
+    marginTop: 10
+  },
+  Text: {
+    alignSelf: 'center',
+    justifyContent: 'center'
   },
 });
