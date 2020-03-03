@@ -1,96 +1,172 @@
-import React from "react";
+import React, { Component } from 'react';
 import {
+  Platform,
   StyleSheet,
-  View,
-  ActivityIndicator,
-  FlatList,
   Text,
+  View,
+  ScrollView,
+  TextInput,
+  FlatList,
   Image,
-  TouchableOpacity
-} from "react-native";
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
+import { SearchBar } from 'react-native-elements';
 import WooCommerce from '../WooConfig'
-export default class Categories extends React.Component {
+export default class brands extends Component {
+
+
   constructor(props) {
     super(props);
+    this.getListCall = this.getListCall.bind(this);
+    this.GetListItem = this.GetListItem.bind(this);
     this.state = {
-      loading: true,
-      dataSource: []
-    };
+      JSONResult: "",
+    }
   }
+  updateSearch = search => {
+    this.setState({ search });
+  };
   componentDidMount() {
+    this.getListCall();
+  }
+  clickEventListener() {
+    Alert.alert("Success", "Product has beed added to cart")
+  }
+  getListCall() {
     WooCommerce.get('products', { 'per_page': 100 })
       .then((responseJson) => {
         this.setState({
           loading: false,
-          dataSource: responseJson
+          JSONResult: responseJson
         })
-       console.log(responseJson)
+        console.log(responseJson)
       })
       .catch((error) => {
         console.log(error.responseJson.data);
       });
+
+
   }
-  FlatListItemSeparator = () => {
+  GetListItem(name) {
+
+    Alert.alert(name);
+  }
+
+  ItemSeparatorLine = () => {
     return (
-      <View style={{
-        height: .5,
-        width: "100%",
-        backgroundColor: "white",
-      }}
+      <View
+        style={{
+          height: .5,
+          width: "100%",
+          backgroundColor: "#111a0b",
+        }}
       />
     );
   }
-  renderItem = (data) => {
-    return(<TouchableOpacity style={styles.list}>
-      <Image style={styles.image} source={{ uri: data.item.images[0].src }} />
-      <Text style={styles.Text}>{data.item.name}</Text>
-    </TouchableOpacity>)
-  }
   render() {
-    if (this.state.loading) {
-      return (
-        <View style={styles.loader}>
-          <ActivityIndicator size="large" color="#0c9" />
-        </View>
-      )
-    }
+    const { search } = this.state;
     return (
       <View style={styles.container}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+              <SearchBar
+                inputContainerStyle={{
+                  backgroundColor: 'white', borderWidth: 1, borderBottomWidth: 1,
+                  borderRadius: 55, height: 35,
+                }}
+                searchIcon={{ color: 'black' }}
+                cancelIcon={{ color: 'black' }}
+                containerStyle={{
+                  backgroundColor: 'white', borderWidth: 0,
+                  borderBottomColor: 'white',
+                  borderLeftColor: 'white',
+                  borderRightColor: 'white',
+                  borderTopColor: 'white',
+                  borderRadius: 55,
+                  height: 45,
+                  width: '95%',
+                  marginLeft: 10
+                }}
+                placeholder="Search ....."
+                onChangeText={this.updateSearch}
+                value={search}
+              />
+            </View>
         <FlatList
-          data={this.state.dataSource}
-          ItemSeparatorComponent={this.FlatListItemSeparator}
-          renderItem={item => this.renderItem(item)}
-          keyExtractor={item => item.id.toString()}
+          data={this.state.JSONResult}
+          ItemSeparatorComponent={this.ItemSeparatorLine}
+          renderItem={({ item }) =>
+            <View style={styles.Touchable} >
+              <TouchableOpacity activeOpacity={0.9} onPress={this.GetListItem.bind(this, item.name)}>
+                <Image
+                  source={{ uri: item.images[0].src }}
+                  style={styles.Image}
+                />
+                <View style={styles.nameView} >
+                  <Text style={styles.Textview}>{item.name} </Text>
+                </View>
+                <View style={styles.addToCarContainer}>
+                  <TouchableOpacity style={styles.shareButton} onPress={() => this.clickEventListener()}>
+                    <Text style={styles.shareButtonText}>Add To Cart</Text>
+                  </TouchableOpacity>
+                </View>
+              </TouchableOpacity>
+            </View>
+          }
+          numColumns={2}
+          keyExtractor={(item, index) => index}
         />
       </View>
-    )
+    );
   }
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white"
+    marginLeft: 3.5,
+    backgroundColor: 'white'
   },
-  loader: {
+  Touchable: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "lightgrey"
+    marginLeft: 3.5,
+    justifyContent:'center',
+    marginTop: 5,
   },
-  list: {
-    paddingVertical: 4,
-    margin: 5,
-    backgroundColor: "lightblue",
-
+  nameView: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  image: {
-    width: 100,
-    height: 100,
-    alignSelf: 'center',
-    marginTop: 10
+  Textview:
+  {
+    fontSize: 15,
+    textAlign: 'center',
+    margin: 8,
+    color: 'black',
+    width: 150,
   },
-  Text: {
-    alignSelf: 'center',
-    justifyContent: 'center'
+  instructions: {
+    color: 'black',
+    marginBottom: 5,
   },
+  Image:
+  {
+    width: '95%',
+    height: 190,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  shareButton: {
+    height:30,
+    width:'70%',
+    alignSelf:'center',
+    alignItems: 'center',
+    borderRadius:15,
+    backgroundColor: "#00BFFF",
+  },
+  addToCarContainer:
+  {
+   justifyContent:'center',
+   margin:10,
+  }
 });

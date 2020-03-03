@@ -30,9 +30,10 @@ import Cart from './pages/Cart';
 import Notisfication from './pages/Notisfication';
 import { Image } from 'react-native';
 import Account from './pages/Accounts';
-import WebVi from './pages/WebVi';
+import CASUAL_SHOES from './pages/CASUAL_SHOES';
 import Login from './pages/Login';
 import Signup from './pages/Signup'
+import Bucket from './pages/Bucket'
 const HomeStack = createStackNavigator(
   {
     //Defination of Navigaton from home screen
@@ -43,7 +44,8 @@ const HomeStack = createStackNavigator(
     FlashDetail: { screen: FlashDetail },
     brands: { screen: brands },
     Offers: { screen: Offers },
-    WebVi:{screen:WebVi},
+    Bucket: { screen: Bucket },
+    CASUAL_SHOES:{screen:CASUAL_SHOES},
     Topselection: { screen: Topselection },
     Splash: {
       screen: Splash,

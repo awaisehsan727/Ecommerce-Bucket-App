@@ -1,134 +1,125 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  FlatList,
-  Modal,
-} from 'react-native';
-import FastImage from 'react-native-fast-image';
+
+import { StyleSheet, View, ActivityIndicator, FlatList, Text, Image, Alert } from 'react-native';
+
+import WooCommerce from '../WooConfig'
 
 export default class Offers extends Component {
+
   constructor(props) {
+
     super(props);
+
     this.state = {
-      imageuri: '',
-      ModalVisibleStatus: false,
-    };
+      dataSource: [],
+      isLoading: true
+
+    }
   }
 
-  ShowModalFunction(visible, imageURL) {
-    //handler to handle the click on image of Grid
-    //and close button on modal
-    this.setState({
-      ModalVisibleStatus: visible,
-      imageuri: imageURL,
-    });
+  GetItem(flower_name) {
+
+    Alert.alert(flower_name);
+
   }
 
+  FlatListItemSeparator = () => {
+    return (
+      <View
+        style={{
+          height: .5,
+          width: "100%",
+          backgroundColor: "#000",
+        }}
+      />
+    );
+  }
   componentDidMount() {
-    var that = this;
-    let items = Array.apply(null, Array(120)).map((v, i) => {
-      return { id: i, src: 'https://unsplash.it/400/400?image=' + (i + 1) };
-    });
-    that.setState({
-      dataSource: items,
-    });
+    WooCommerce.get('products', { 'per_page': 100 })
+      .then((responseJson) => {
+        this.setState({
+          loading: false,
+          dataSource: responseJson
+        })
+        console.log(responseJson)
+      })
+      .catch((error) => {
+        console.log(error.responseJson.data);
+      });
   }
 
   render() {
-    if (this.state.ModalVisibleStatus) {
+
+    if (this.state.isLoading) {
       return (
-        <Modal
-          transparent={false}
-          animationType={'fade'}
-          visible={this.state.ModalVisibleStatus}
-          onRequestClose={() => {
-            this.ShowModalFunction(!this.state.ModalVisibleStatus, '');
-          }}>
-          <View style={styles.modelStyle}>
-            <FastImage
-              style={styles.fullImageStyle}
-              source={{ uri: this.state.imageuri }}
-              resizeMode={FastImage.resizeMode.contain}
-            />
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={styles.closeButtonStyle}
-              onPress={() => {
-                this.ShowModalFunction(!this.state.ModalVisibleStatus, '');
-              }}>
-              <FastImage
-                source={{
-                  uri:
-                    'https://raw.githubusercontent.com/AboutReact/sampleresource/master/close.png',
-                }}
-                style={{ width: 35, height: 35, marginTop: 16 }}
-              />
-            </TouchableOpacity>
-          </View>
-        </Modal>
-      );
-    } else {
-      return (
-        <View style={styles.container}>
-          <FlatList
-            data={this.state.dataSource}
-            renderItem={({ item }) => (
-              <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
-                <TouchableOpacity
-                  key={item.id}
-                  style={{ flex: 1 }}
-                  onPress={() => {
-                    this.ShowModalFunction(true, item.src);
-                  }}>
-                  <FastImage
-                    style={styles.image}
-                    source={{
-                      uri: item.src,
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-            //Setting the number of column
-            numColumns={3}
-            keyExtractor={(item, index) => index.toString()}
-          />
+
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+
+          <ActivityIndicator size="large" />
+
         </View>
+
       );
+
     }
+    return (
+
+      <View style={styles.MainContainer}>
+
+        <FlatList
+
+          data={this.state.dataSource}
+
+          ItemSeparatorComponent={this.FlatListItemSeparator}
+
+          renderItem={({ item }) =>
+
+          <TouchableOpacity activeOpacity={0.9} onPress={this.GetListItem.bind(this, item.name)}>
+          <View style={styles.container} >
+            <Image
+              source={{ uri: item.images[0].src }}
+              style={styles.Image}
+            />
+            <Text style={styles.welcome} >{item.name} </Text>
+          </View>
+        </TouchableOpacity>
+
+          }
+
+          keyExtractor={(item, index) => index.toString()}
+
+        />
+
+      </View>
+    );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 30,
-  },
-  image: {
-    height: 120,
-    width: '100%',
-  },
-  fullImageStyle: {
+
+  MainContainer: {
+
     justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-    width: '98%',
-    resizeMode: 'contain',
-  },
-  modelStyle: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    margin: 5,
   },
-  closeButtonStyle: {
-    width: 25,
-    height: 25,
-    top: 9,
-    right: 9,
-    position: 'absolute',
+
+  imageView: {
+
+    width: '50%',
+    height: 100,
+    margin: 7,
+    borderRadius: 7
+
   },
+
+  textView: {
+
+    width: '50%',
+    textAlignVertical: 'center',
+    padding: 10,
+    color: '#000'
+
+  }
+
 });

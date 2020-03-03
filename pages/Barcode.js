@@ -16,10 +16,7 @@ export default class Barcode extends PureComponent {
     }
   }
   onBarCodeRead = (e) => {
-  //   this.props.navigation.navigate('WebVi', {  
-  //     Value:e.data,  
-  // })  ;
-  Alert.alert("Barcode value is" + e.data, "Barcode type is" + e.type);
+    this.props.navigation.navigate('Bucket')  ;
   }
   render() {
     const leftTop = {
@@ -51,7 +48,7 @@ export default class Barcode extends PureComponent {
           keepAwake={true}
           defaultOnFocusComponent
           clearWindowBackground={true}
-          playSoundOnCapture={false}>
+          playSoundOnCapture={true}>
            <View style={{...StyleSheet.absoluteFill,alignItems:'center',justifyContent:'center'}}>
              <View style={{width:width/2,height:width/2}}>
                <View style={{flex:1,flexDirection:'row'}}>

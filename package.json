@@ -27,6 +27,7 @@
     "react-native-screens": "^2.0.0-alpha.32",
     "react-native-tabs": "^1.0.9",
     "react-native-vector-icons": "^6.6.0",
+    "react-native-webview": "^8.1.2",
     "react-native-woocommerce-api": "^1.0.12",
     "react-navigation": "^4.1.0",
     "react-navigation-stack": "^2.0.16",

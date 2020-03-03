@@ -23,17 +23,17 @@ export default class HomeScreen extends React.Component {
     super(props);
     this.state = {
       images: [
-        "https://source.unsplash.com/1024x768/?nature",
-        "https://source.unsplash.com/1024x768/?water",
-        "https://source.unsplash.com/1024x768/?girl",
-        "https://source.unsplash.com/1024x768/?tree",
-        "https://source.unsplash.com/1024x768/?tree",
-        "https://source.unsplash.com/1024x768/?tree",
-        "https://source.unsplash.com/1024x768/?tree", // Network image
+        "https://bucket.pk/wp-content/uploads/2020/01/Baby-Pools-1400x554.jpg",
+        "https://bucket.pk/wp-content/uploads/2019/11/MEN’S-FOOTWEAR-1400x554.jpg",
+        "https://bucket.pk/wp-content/uploads/2019/11/MEN’S-GARMENTS-1400x554.jpg",
+        // "https://source.unsplash.com/1024x768/?tree",
+        // "https://source.unsplash.com/1024x768/?tree",
+        // "https://source.unsplash.com/1024x768/?tree",
+        // "https://source.unsplash.com/1024x768/?tree", // Network image
         // Local image
       ],
       imag: [
-        "https://source.unsplash.com/1024x768/?nature",
+        "https://bucket.pk/wp-content/uploads/2019/11/MEN’S-GARMENTS-1400x554.jpg",
       ],
       dataSource: {},
     };
@@ -170,7 +170,7 @@ export default class HomeScreen extends React.Component {
                 </TouchableOpacity>
               </View>
               <View style={styles.Imag}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('CASUAL_SHOES')}>
                   {/*Donute Button Image */}
                   <Image
                     style={{
@@ -180,7 +180,7 @@ export default class HomeScreen extends React.Component {
                       alignSelf: 'center',
                       borderRadius: 10,
                     }}
-                    source={{ uri: "https://source.unsplash.com/1024x768/?nature" }}
+                    source={{ uri: "https://bucket.pk/wp-content/uploads/2019/11/MEN’S-FOOTWEAR-1400x554.jpg" }}
                   />
                 </TouchableOpacity>
               </View>
