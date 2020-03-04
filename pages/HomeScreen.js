@@ -14,7 +14,7 @@ export default class HomeScreen extends React.Component {
   //Home Screen to show in Home Option
   static navigationOptions = {
     headerShown: false
-    };
+  };
   state = {
     search: '',
   };
