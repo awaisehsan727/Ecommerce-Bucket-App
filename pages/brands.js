@@ -6,37 +6,37 @@ import {
   View,
   ScrollView,
   TouchableHighlight,
+  ActivityIndicator,
   FlatList,
   Image,
   Alert,
   Modal,
+  StatusBar,
   TouchableOpacity,
 } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import WooCommerce from '../WooConfig'
 export default class brands extends Component {
-
-
   constructor(props) {
     super(props);
-    this.getListCall = this.getListCall.bind(this);
-    this.GetListItem = this.GetListItem.bind(this);
     this.state = {
       JSONResult: [],
+      loading: true,
       modalVisible: false,
+      count: 0
     }
     this.arrayholder = [];
   }
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
+  _incrementCount = () => {
+    this.setState(prevState => ({ count: prevState.count + 1 }));
+  }
+  _DecrementCount = () => {
+    this.setState(prevState => ({ count: prevState.count - 1 }));
+  }
   componentDidMount() {
-    this.getListCall();
-  }
-  clickEventListener() {
-    Alert.alert("Success", "Product has beed added to cart")
-  }
-  getListCall() {
     WooCommerce.get('products', { 'per_page': 100 })
       .then((responseJson) => {
         this.setState({
@@ -49,8 +49,9 @@ export default class brands extends Component {
       .catch((error) => {
         console.log(error.responseJson.data);
       });
-
-
+  }
+  clickEventListener() {
+    Alert.alert("Success", "Product has beed added to cart")
   }
   GetListItem(name) {
 
@@ -70,7 +71,75 @@ export default class brands extends Component {
       JSONResult: newData,
     });
   };
-
+  GetItem(id) {
+    return (<Modal
+      animationType="slide"
+      transparent={false}
+      visible={this.state.modalVisible}
+      onRequestClose={() => {
+        this.setState({ modalVisible: false });
+      }}>
+      <View style={styles.container}>
+        <StatusBar backgroundColor='#42717E' barStyle="light-content" />
+        <ScrollView>
+          <View style={{ alignItems: 'center', marginHorizontal: 30, marginTop: 15 }}>
+            <Image style={styles.productImg} source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3v7KDJN7TAoJa5sFaPWcp1HX8JFcpF3z5K3ngz4L6kWoEP7Ca" }} />
+            <Text style={styles.name}>Super Soft T-Shirt</Text>
+            <Text style={styles.price}>$ 12.22</Text>
+            <Text style={styles.description}>
+              Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+              Aenean commodo ligula eget dolor. Aenean massa. Cum sociis
+              natoque penatibus et magnis dis parturient montes,
+              nascetur ridiculus mus. Donec quam felis, ultricies nec
+            </Text>
+          </View>
+          <View style={styles.Iconlis}>
+          <TouchableOpacity  onPress={() => this._DecrementCount()}>
+            <Image style={styles.btnSize} source={require('../images/minus.png')} />
+            </TouchableOpacity>
+            <Text style={styles.Textvi}>{this.state.count}</Text>
+            <TouchableOpacity  onPress={() => this._incrementCount()}>
+            <Image style={styles.btnSize}  source={require('../images/add.png')} />
+            </TouchableOpacity>
+          </View>
+          {/* <View style={styles.contentSizes}>
+            <TouchableOpacity style={styles.btnSize}><Text>S</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.btnSize}><Text>M</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.btnSize}><Text>L</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.btnSize}><Text>XL</Text></TouchableOpacity>
+          </View> */}
+          <View style={styles.separator}></View>
+          <View style={styles.addToCarContainers}>
+            <TouchableOpacity style={styles.shareButton} onPress={() => this.clickEventListener()}>
+              <Text style={styles.shareButtonTexts}>Add To Cart</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </View>
+    </Modal>
+    )
+  }
+  renderItem = (data) => {
+    return (<View style={styles.Touchable} >
+      <Image
+        source={{ uri: data.item.images[0].src }}
+        style={styles.Image}
+      />
+      <View style={styles.nameView} >
+        <Text style={styles.Textview}>{data.item.name} </Text>
+      </View>
+      <View style={styles.addToCarContainer}>
+        <TouchableOpacity style={styles.shareButtons} onPress={() => {
+          this.GetItem(data.item.id);
+        }}
+          onPressIn={() => {
+            this.setModalVisible(true);
+          }}>
+          <Text style={styles.shareButtonText}>Add To Cart</Text>
+        </TouchableOpacity>
+      </View>
+    </View>)
+  }
   ItemSeparatorLine = () => {
     return (
       <View
@@ -83,58 +152,16 @@ export default class brands extends Component {
     );
   }
   render() {
+    if (this.state.loading) {
+      return (
+        <View style={styles.loader}>
+          <ActivityIndicator size="large" color="#0c9" />
+        </View>
+      )
+    }
     return (
       <View style={styles.container}>
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            this.setState({ modalVisible: false });
-          }}>
-          <View style={styles.container}>
-        <ScrollView>
-          <View style={{alignItems:'center', marginHorizontal:30}}>
-            <Image style={styles.productImg} source={{uri:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3v7KDJN7TAoJa5sFaPWcp1HX8JFcpF3z5K3ngz4L6kWoEP7Ca"}}/>
-            <Text style={styles.name}>Super Soft T-Shirt</Text>
-            <Text style={styles.price}>$ 12.22</Text>
-            <Text style={styles.description}>
-              Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-              Aenean commodo ligula eget dolor. Aenean massa. Cum sociis 
-              natoque penatibus et magnis dis parturient montes, 
-              nascetur ridiculus mus. Donec quam felis, ultricies nec
-            </Text>
-          </View>
-          <View style={styles.starContainer}>
-            <Image style={styles.star} source={{uri:"https://img.icons8.com/color/40/000000/star.png"}}/>
-            <Image style={styles.star} source={{uri:"https://img.icons8.com/color/40/000000/star.png"}}/>
-            <Image style={styles.star} source={{uri:"https://img.icons8.com/color/40/000000/star.png"}}/>
-            <Image style={styles.star} source={{uri:"https://img.icons8.com/color/40/000000/star.png"}}/>
-            <Image style={styles.star} source={{uri:"https://img.icons8.com/color/40/000000/star.png"}}/>
-          </View>
-          <View style={styles.contentColors}>
-            <TouchableOpacity style={[styles.btnColor, {backgroundColor:"#00BFFF"}]}></TouchableOpacity> 
-            <TouchableOpacity style={[styles.btnColor, {backgroundColor:"#FF1493"}]}></TouchableOpacity> 
-            <TouchableOpacity style={[styles.btnColor, {backgroundColor:"#00CED1"}]}></TouchableOpacity> 
-            <TouchableOpacity style={[styles.btnColor, {backgroundColor:"#228B22"}]}></TouchableOpacity> 
-            <TouchableOpacity style={[styles.btnColor, {backgroundColor:"#20B2AA"}]}></TouchableOpacity> 
-            <TouchableOpacity style={[styles.btnColor, {backgroundColor:"#FF4500"}]}></TouchableOpacity> 
-          </View>
-          <View style={styles.contentSize}>
-            <TouchableOpacity style={styles.btnSize}><Text>S</Text></TouchableOpacity> 
-            <TouchableOpacity style={styles.btnSize}><Text>M</Text></TouchableOpacity> 
-            <TouchableOpacity style={styles.btnSize}><Text>L</Text></TouchableOpacity> 
-            <TouchableOpacity style={styles.btnSize}><Text>XL</Text></TouchableOpacity> 
-          </View>
-          <View style={styles.separator}></View>
-          <View style={styles.addToCarContainers}>
-            <TouchableOpacity style={styles.shareButton} onPress={()=> this.clickEventListener()}>
-              <Text style={styles.shareButtonText}>Add To Cart</Text>  
-            </TouchableOpacity>
-          </View> 
-        </ScrollView>
-      </View>
-        </Modal>
+        {this.GetItem()}
         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
           <SearchBar
             inputContainerStyle={{
@@ -163,46 +190,27 @@ export default class brands extends Component {
         <FlatList
           data={this.state.JSONResult}
           ItemSeparatorComponent={this.ItemSeparatorLine}
-          renderItem={({ item }) => {
-            if (item.categories.name == null) {
-              console.log('not found record')
-            }
-            else {
-              console.log(item.categories.name)
-            }
-
-            return (<View style={styles.Touchable} >
-              <Image
-                source={{ uri: item.images[0].src }}
-                style={styles.Image}
-              />
-              <View style={styles.nameView} >
-                <Text style={styles.Textview}>{item.name} </Text>
-              </View>
-              <View style={styles.addToCarContainer}>
-                <TouchableOpacity style={styles.shareButton} onPress={() => {
-                  this.setModalVisible(true);
-                }}>
-                  <Text style={styles.shareButtonText}>Add To Cart</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            )
-          }
-          }
+          renderItem={item => this.renderItem(item)}
           keyExtractor={item => item.id.toString()}
           numColumns={2}
         />
       </View>
-    );
+    )
   }
 }
-
 const styles = StyleSheet.create({
   container: {
+    justifyContent: 'center',
     flex: 1,
-    marginLeft: 3.5,
+    margin: 5,
+    marginTop: 5,
     backgroundColor: 'white'
+  },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "lightgrey"
   },
   Touchable: {
     flex: 1,
@@ -236,7 +244,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  shareButton: {
+  shareButtons: {
     height: 30,
     width: '70%',
     alignSelf: 'center',
@@ -249,86 +257,122 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     margin: 10,
   },
-  productImg:{
-    width:200,
-    height:200,
+  productImg: {
+    width: 200,
+    height: 200,
   },
-  name:{
-    fontSize:28,
-    color:"#696969",
-    fontWeight:'bold'
+  name: {
+    fontSize: 28,
+    color: "#696969",
+    fontWeight: 'bold'
   },
-  price:{
-    marginTop:10,
-    fontSize:18,
-    color:"green",
-    fontWeight:'bold'
+  price: {
+    marginTop: 10,
+    fontSize: 18,
+    color: "green",
+    fontWeight: 'bold'
   },
-  description:{
-    textAlign:'center',
-    marginTop:10,
-    color:"#696969",
+  description: {
+    textAlign: 'center',
+    marginTop: 10,
+    color: "#696969",
   },
-  star:{
-    width:40,
-    height:40,
+  star: {
+    width: 40,
+    height: 40,
   },
   btnColor: {
-    height:30,
-    width:30,
-    borderRadius:30,
-    marginHorizontal:3
+    height: 30,
+    width: 30,
+    borderRadius: 30,
+    marginHorizontal: 3
   },
   btnSize: {
-    height:40,
-    width:40,
-    borderRadius:40,
-    borderColor:'#778899',
-    borderWidth:1,
-    marginHorizontal:3,
-    backgroundColor:'white',
+    height: 40,
+    width: 40,
+    borderRadius: 40,
+    borderColor: '#778899',
+    borderWidth: 1,
+    marginHorizontal: 3,
+    backgroundColor: 'white',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    color: 'black',
+    fontSize: 20,
   },
-  starContainer:{
-    justifyContent:'center', 
-    marginHorizontal:30, 
-    flexDirection:'row', 
-    marginTop:20
+  starContainer: {
+    justifyContent: 'center',
+    marginHorizontal: 30,
+    flexDirection: 'row',
+    marginTop: 20
   },
-  contentColors:{ 
-    justifyContent:'center', 
-    marginHorizontal:30, 
-    flexDirection:'row', 
-    marginTop:20
+  contentColors: {
+    justifyContent: 'center',
+    marginHorizontal: 30,
+    flexDirection: 'row',
+    marginTop: 20
   },
-  contentSize:{ 
-    justifyContent:'center', 
-    marginHorizontal:30, 
-    flexDirection:'row', 
-    marginTop:20
+  contentSize: {
+    justifyContent: 'center',
+    marginHorizontal: 30,
+    flexDirection: 'row',
+    marginTop: 20
   },
-  separator:{
-    height:2,
-    backgroundColor:"#eeeeee",
-    marginTop:20,
-    marginHorizontal:30
+  contentSizes: {
+    justifyContent: 'center',
+    marginHorizontal: 30,
+    flexDirection: 'row',
+    marginTop: 20
+  },
+  separator: {
+    height: 2,
+    backgroundColor: "#eeeeee",
+    marginTop: 20,
+    marginHorizontal: 30
   },
   shareButton: {
-    marginTop:10,
-    height:45,
+    marginTop: 10,
+    height: 45,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius:30,
+    borderRadius: 30,
     backgroundColor: "#00BFFF",
   },
-  shareButtonText:{
+  shareButtonText: {
     color: "#FFFFFF",
-    fontSize:20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 10,
+    marginTop: 7,
   },
-  addToCarContainers:{
-    marginHorizontal:30
-  }   
+  shareButtonTexts: {
+    color: "#FFFFFF",
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 20,
+  },
+  addToCarContainers: {
+    marginHorizontal: 30
+  },
+  Iconlis:
+  {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10,
+    marginLeft: 5,
+    marginRight: 5
+  },
+  Textvi: {
+    height: 40,
+    width: 50,
+    borderColor: '#778899',
+    borderWidth: 1,
+    color:'black',
+    marginHorizontal: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize:30,
+  },
 });

@@ -7,7 +7,7 @@ export default class FlashDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
+      loading: true,
       data: [],
     };
 
@@ -89,10 +89,10 @@ export default class FlashDetail extends Component {
   render() {
     if (this.state.loading) {
       return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <ActivityIndicator />
+        <View style={styles.loader}>
+          <ActivityIndicator size="large" color="#0c9" />
         </View>
-      );
+      )
     }
     return (
       <View style={{ flex: 1  }}>
@@ -134,5 +134,11 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 5,
     marginTop: (Platform.OS === 'ios') ? 20 : 0,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "lightgrey"
   },
 });

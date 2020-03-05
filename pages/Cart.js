@@ -43,13 +43,10 @@ export default class Cart extends Component {
             <Image style={styles.star} source={{uri:"https://img.icons8.com/color/40/000000/star.png"}}/>
             <Image style={styles.star} source={{uri:"https://img.icons8.com/color/40/000000/star.png"}}/>
           </View>
-          <View style={styles.contentColors}>
-            <TouchableOpacity style={[styles.btnColor, {backgroundColor:"#00BFFF"}]}></TouchableOpacity> 
-            <TouchableOpacity style={[styles.btnColor, {backgroundColor:"#FF1493"}]}></TouchableOpacity> 
-            <TouchableOpacity style={[styles.btnColor, {backgroundColor:"#00CED1"}]}></TouchableOpacity> 
-            <TouchableOpacity style={[styles.btnColor, {backgroundColor:"#228B22"}]}></TouchableOpacity> 
-            <TouchableOpacity style={[styles.btnColor, {backgroundColor:"#20B2AA"}]}></TouchableOpacity> 
-            <TouchableOpacity style={[styles.btnColor, {backgroundColor:"#FF4500"}]}></TouchableOpacity> 
+          <View style={styles.contentSize}>
+            <Image style={styles.btnSize} source={require('../images/minus.png')} />
+             <Text style={styles.Textvi}></Text>
+            <Image style={styles.btnSize} source={require('../images/add.png')} />
           </View>
           <View style={styles.contentSize}>
             <TouchableOpacity style={styles.btnSize}><Text>S</Text></TouchableOpacity> 
@@ -111,7 +108,17 @@ const styles = StyleSheet.create({
     borderWidth:1,
     marginHorizontal:3,
     backgroundColor:'white',
-
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  Textvi: {
+    height:40,
+    width:50,
+    borderColor:'#778899',
+    borderWidth:1,
+    marginHorizontal:3,
+    backgroundColor:'white',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
