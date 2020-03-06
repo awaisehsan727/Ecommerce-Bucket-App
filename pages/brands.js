@@ -23,6 +23,7 @@ export default class brands extends Component {
       JSONResult: [],
       loading: true,
       modalVisible: false,
+      val:'',
       count: 0
     }
     this.arrayholder = [];
@@ -50,8 +51,12 @@ export default class brands extends Component {
         console.log(error.responseJson.data);
       });
   }
-  clickEventListener() {
-    Alert.alert("Success", "Product has beed added to cart")
+  clickListner(id)
+  {
+    this.setModalVisible(false)
+    this.props.navigation.navigate('Offers', {  
+    id: id,   
+  });
   }
   GetListItem(name) {
 
@@ -71,7 +76,45 @@ export default class brands extends Component {
       JSONResult: newData,
     });
   };
-  GetItem(id) {
+  CarItem = (data) => {
+
+    if(data.item.id==this.val)
+    {
+      return (<ScrollView>
+        <View style={{ justifyContent:'center',alignItems: 'center', marginHorizontal: 30, marginTop: 15 }}>
+          <Image style={styles.productImg} source={{ uri: data.item.images[0].src }} />
+          <Text style={styles.name}>{data.item.name}</Text>
+          <Text style={styles.price}>Rs {data.item.price}</Text>
+          <Text style={styles.description}>
+           {data.item.description}
+          </Text>
+        </View>
+        <View style={styles.Iconlis}>
+        <TouchableOpacity  onPress={() => this._DecrementCount()}>
+          <Image style={styles.btnSize} source={require('../images/minus.png')} />
+          </TouchableOpacity>
+          <Text style={styles.Textvi}>  {this.state.count}</Text>
+          <TouchableOpacity  onPress={() => this._incrementCount()}>
+          <Image style={styles.btnSize}  source={require('../images/add.png')} />
+          </TouchableOpacity>
+        </View>
+        
+        <View style={styles.separator}></View>
+        <View style={styles.addToCarContainers}>
+        <TouchableOpacity style={styles.shareButton} 
+        onPress={this.clickListner.bind(this, data.item.id)}>
+            <Text style={styles.shareButtonTexts}>Add To Cart</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>)
+    }
+    else
+    {
+      //
+    }
+    
+  }
+  GetItem() {
     return (<Modal
       animationType="slide"
       transparent={false}
@@ -81,40 +124,12 @@ export default class brands extends Component {
       }}>
       <View style={styles.container}>
         <StatusBar backgroundColor='#42717E' barStyle="light-content" />
-        <ScrollView>
-          <View style={{ alignItems: 'center', marginHorizontal: 30, marginTop: 15 }}>
-            <Image style={styles.productImg} source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3v7KDJN7TAoJa5sFaPWcp1HX8JFcpF3z5K3ngz4L6kWoEP7Ca" }} />
-            <Text style={styles.name}>Super Soft T-Shirt</Text>
-            <Text style={styles.price}>$ 12.22</Text>
-            <Text style={styles.description}>
-              Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-              Aenean commodo ligula eget dolor. Aenean massa. Cum sociis
-              natoque penatibus et magnis dis parturient montes,
-              nascetur ridiculus mus. Donec quam felis, ultricies nec
-            </Text>
-          </View>
-          <View style={styles.Iconlis}>
-          <TouchableOpacity  onPress={() => this._DecrementCount()}>
-            <Image style={styles.btnSize} source={require('../images/minus.png')} />
-            </TouchableOpacity>
-            <Text style={styles.Textvi}>{this.state.count}</Text>
-            <TouchableOpacity  onPress={() => this._incrementCount()}>
-            <Image style={styles.btnSize}  source={require('../images/add.png')} />
-            </TouchableOpacity>
-          </View>
-          {/* <View style={styles.contentSizes}>
-            <TouchableOpacity style={styles.btnSize}><Text>S</Text></TouchableOpacity>
-            <TouchableOpacity style={styles.btnSize}><Text>M</Text></TouchableOpacity>
-            <TouchableOpacity style={styles.btnSize}><Text>L</Text></TouchableOpacity>
-            <TouchableOpacity style={styles.btnSize}><Text>XL</Text></TouchableOpacity>
-          </View> */}
-          <View style={styles.separator}></View>
-          <View style={styles.addToCarContainers}>
-            <TouchableOpacity style={styles.shareButton} onPress={() => this.clickEventListener()}>
-              <Text style={styles.shareButtonTexts}>Add To Cart</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
+        <FlatList
+          data={this.state.JSONResult}
+          renderItem={item => this.CarItem(item)}
+          keyExtractor={item => item.id.toString()}
+          numColumns={2}
+        />
       </View>
     </Modal>
     )
@@ -130,10 +145,11 @@ export default class brands extends Component {
       </View>
       <View style={styles.addToCarContainer}>
         <TouchableOpacity style={styles.shareButtons} onPress={() => {
-          this.GetItem(data.item.id);
+          this.GetItem();
         }}
           onPressIn={() => {
             this.setModalVisible(true);
+            this.val=data.item.id;
           }}>
           <Text style={styles.shareButtonText}>Add To Cart</Text>
         </TouchableOpacity>
@@ -152,6 +168,7 @@ export default class brands extends Component {
     );
   }
   render() {
+    const { navigate } = this.props.navigation;
     if (this.state.loading) {
       return (
         <View style={styles.loader}>
@@ -258,21 +275,30 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   productImg: {
+    justifyContent:'center',
+    alignSelf:'center',
     width: 200,
     height: 200,
   },
   name: {
+    justifyContent:'center',
+    alignSelf:'center',
+    textAlign:'center',
     fontSize: 28,
     color: "#696969",
     fontWeight: 'bold'
   },
   price: {
+    justifyContent:'center',
+    alignSelf:'center',
     marginTop: 10,
     fontSize: 18,
     color: "green",
     fontWeight: 'bold'
   },
   description: {
+    justifyContent:'center',
+    alignSelf:'center',
     textAlign: 'center',
     marginTop: 10,
     color: "#696969",
@@ -298,8 +324,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    color: 'black',
-    fontSize: 20,
   },
   starContainer: {
     justifyContent: 'center',
@@ -359,10 +383,7 @@ const styles = StyleSheet.create({
   Iconlis:
   {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 10,
-    marginLeft: 5,
-    marginRight: 5
+    justifyContent: 'center',
   },
   Textvi: {
     height: 40,

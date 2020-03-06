@@ -103,7 +103,6 @@ export default class Categories extends React.Component {
           data={this.state.dataSource}
           ItemSeparatorComponent={this.FlatListItemSeparator}
           renderItem={({ item }) => {
-            console.log(item)
             if (item.image == null) {
               
               return (
